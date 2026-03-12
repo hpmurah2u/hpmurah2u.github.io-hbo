@@ -1,107 +1,43 @@
-
-<!DOCTYPE html><html><head>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
 <title>EJALTV</title>
-<style>div a img{visibility:hidden;}body{margin:0;background-color: black;}</style>
-<meta name='viewport' content='width=device-width, initial-scale=1.0' />
-<meta name="referrer" content="no-referrer" />
-  
-<script src='https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.ui.min.js' crossorigin='anonymous'></script>
-<!-- <script src="./shaka.php?js=16888&libraryfont=Arial"></script> -->
-<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/controls.min.css' crossorigin='anonymous' />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js"></script>
+</head>
 
-<center><b><p style="color:white; opacity:0.27;">EJALTV</b></p>
 <body>
-<style>
-    /* Add your gradient styles here */
-    .shaka-seek-bar-container .shaka-seek-bar {
-      background:  linear-gradient(to right, #051937, #00205b, #00247e, #22229f, #510dbc);
+
+<video id="video"
+       width="900"
+       controls
+       autoplay>
+</video>
+
+<script>
+async function initPlayer() {
+
+  const video = document.getElementById('video');
+  const player = new shaka.Player(video);
+
+  player.configure({
+    drm: {
+      clearKeys: {
+        "7ad888ee5dd6496a8c2c77a6284ff936": "718716c435914901d2551930a256974e"
+      }
     }
-.shaka-volume-bar-container .shaka-volume-bar {
-      background:  linear-gradient(to right, #051937, #00205b, #00247e, #22229f, #510dbc);
-    }
-    /* Change color of all Shaka Player SVG icons */
-    .shaka-video-container .material-icons-round {
-      color: #00abe2;
-    }
-.shaka-spinner-path {
-  stroke-dasharray: 1, 2000;
-  stroke-dashoffset: 0;
-  animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
-  stroke-linecap: round;
-}
-@keyframes color {
-  100%,
-  0% {
-    stroke: #d62d20;
-  }
-  40% {
-    stroke: #0057e7;
-  }
-  66% {
-    stroke: #008744;
-  }
-  80%,
-  90% {
-    stroke: #ffa700;
+  });
+
+  try {
+    await player.load("https://unifi-live2.secureswiftcontent.com/Content/DASH/Live/channel(HBO)/master.mpd");
+    console.log("Video loaded!");
+  } catch (e) {
+    console.error("Error loading video", e);
   }
 }
-  </style>
-<div data-shaka-player-container style='position:absolute;z-index: -1;top: 0;left: 0;width: 100%; height: 100%;object-fit: cover;'><video autoplay data-shaka-player poster="https://github.com/hpmurah2u/pejal/blob/PEJAL/ejaltv%20loading%20baru.png?raw=true" id='video' style='width:100%;height:100%;'></video>
-</div>
-  <script>
 
-const manifestUri = "https://unifi-live2.secureswiftcontent.com/Content/DASH/Live/channel(HBO)/master.mpd";
-async function init() {
-const video = document.getElementById('video');
-const ui = video['ui'];
-const controls = ui.getControls();
-const player = controls.getPlayer();
-window.player = player;
-window.ui = ui;
-player.setTextTrackVisibility(true);
-player.configure({
-drm: {"clearKeys": {
-      '7ad888ee5dd6496a8c2c77a6284ff936':'718716c435914901d2551930a256974e'},
-},
-  
-abr: {
-				defaultBandwidthEstimate: 16888,
-                enabled: true,
-                restrictions: {
-  			    minHeight: 359,
-  			    maxHeight: 720  		        }
-			},
-});
-player.addEventListener('error', onPlayerErrorEvent);
-controls.addEventListener('error', onUIErrorEvent);
-try {
-await player.load(manifestUri);
-console.log('The video has now been loaded!');
-} catch (error) {
-onPlayerError(error);
-}
+document.addEventListener('DOMContentLoaded', initPlayer);
+</script>
 
-
-
-}
-
-function onPlayerErrorEvent(errorEvent) {
-onPlayerError(event.detail);
-}
-
-function onPlayerError(error) {
-console.error('Error code', error.code, 'object', error);
-}
-
-function onUIErrorEvent(errorEvent) {
-onPlayerError(event.detail);
-}
-
-function initFailed(errorEvent) {
-console.error('Unable to load the UI library!');
-}
-document.addEventListener('shaka-ui-loaded', init);
-document.addEventListener('shaka-ui-load-failed', initFailed);
-  
-  
-  </script>
+</body>
+</html>
