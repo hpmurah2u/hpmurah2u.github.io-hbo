@@ -27,11 +27,9 @@ height:100vh;
 position:fixed;
 top:12px;
 left:50%;
-
 transform:translateX(-50%);
 
-font-family:'Orbitron', sans-serif;
-
+font-family:'Orbitron',sans-serif;
 font-size:16px;
 
 color:rgba(255,255,255,0.35);
@@ -63,23 +61,25 @@ height: "100%",
 
 autostart: true,
 
+mute: true,
+
 stretching: "fill",
 
 drm: {
-  clearkey: {
-    keyId: "7ad888ee5dd6496a8c2c77a6284ff936",
-    key: "718716c435914901d2551930a256974e"
-  }
+clearkey: {
+keyId: "7ad888ee5dd6496a8c2c77a6284ff936",
+key: "718716c435914901d2551930a256974e"
+}
 }
 
 });
 
-document.getElementById("player").onclick = function(){
+document.getElementById("player").onclick=function(){
+
+player.setMute(false);
 
 if(!document.fullscreenElement){
-
 document.documentElement.requestFullscreen();
-
 }
 
 };
@@ -87,5 +87,4 @@ document.documentElement.requestFullscreen();
 </script>
 
 </body>
-
 </html>
