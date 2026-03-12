@@ -2,41 +2,79 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>EJALTV</title>
+<title>EJALTV Player</title>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js"></script>
+
+<style>
+
+body{
+margin:0;
+background:black;
+overflow:hidden;
+}
+
+#video{
+width:100%;
+height:100vh;
+background:black;
+}
+
+#watermark{
+position:fixed;
+top:8px;
+left:50%;
+transform:translateX(-50%);
+font-family:Arial;
+font-size:14px;
+color:rgba(255,255,255,0.35);
+pointer-events:none;
+letter-spacing:2px;
+}
+
+</style>
 </head>
 
 <body>
 
-<video id="video"
-       width="900"
-       controls
-       autoplay>
-</video>
+<div id="watermark">EJALTV</div>
+
+<video id="video" controls autoplay></video>
 
 <script>
-async function initPlayer() {
 
-  const video = document.getElementById('video');
-  const player = new shaka.Player(video);
+const video = document.getElementById("video");
 
-  player.configure({
-    drm: {
-      clearKeys: {
-        "7ad888ee5dd6496a8c2c77a6284ff936": "718716c435914901d2551930a256974e"
-      }
-    }
-  });
+video.addEventListener("click", () => {
+if (!document.fullscreenElement) {
+video.requestFullscreen();
+}
+});
 
-  try {
-    await player.load("https://unifi-live2.secureswiftcontent.com/Content/DASH/Live/channel(HBO)/master.mpd");
-    console.log("Video loaded!");
-  } catch (e) {
-    console.error("Error loading video", e);
-  }
+async function initPlayer(){
+
+const player = new shaka.Player(video);
+
+player.configure({
+drm:{
+clearKeys:{
+"7ad888ee5dd6496a8c2c77a6284ff936":"718716c435914901d2551930a256974e"
+}
+}
+});
+
+try{
+await player.load("https://unifi-live2.secureswiftcontent.com/Content/DASH/Live/channel(HBO)/master.mpd");
+console.log("Channel Loaded");
+}
+catch(e){
+console.error(e);
 }
 
-document.addEventListener('DOMContentLoaded', initPlayer);
+}
+
+document.addEventListener("DOMContentLoaded", initPlayer);
+
 </script>
 
 </body>
